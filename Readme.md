@@ -10,9 +10,9 @@ This app pulls the insults from my API, which is a dump of a public website on t
 ## Screenshots
 Solvang supports material you:
 <br>
-<img src="https://github.com/HEPOSHEIKKI/Solvang-App/assets/51783206/b6c67290-9686-4c47-b5f7-1878d591f707" width=25% height=25%>
-<img src="https://github.com/HEPOSHEIKKI/Solvang-App/assets/51783206/f3b18a9c-f7f9-4a0a-a602-655b0e288f65" width=25% height=25%>
-<img src="https://github.com/HEPOSHEIKKI/Solvang-App/assets/51783206/fe4a56a5-c10c-429f-93dd-ba15f66e568b" width=25% height=25%>
+<img src="https://github.com/HEPOSHEIKKI/Solvang-App/assets/51783206/c18fa536-f2ad-40e3-b4c2-6d17bd4093d7" width=25% height=25%>
+<img src="https://github.com/HEPOSHEIKKI/Solvang-App/assets/51783206/8edd9ef9-bd8c-4feb-b9ac-5172f24c7f14" width=25% height=25%>
+<img src="https://github.com/HEPOSHEIKKI/Solvang-App/assets/51783206/e728c472-da95-4387-b0cd-c34bc7a3a427" width=25% height=25%>
 
 ## Installation
 
