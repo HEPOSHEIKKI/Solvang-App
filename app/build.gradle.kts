@@ -69,7 +69,6 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    // implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material3:material3:1.2.0-alpha12")
     implementation("com.squareup.retrofit2:adapter-guava:2.9.0")
     implementation("com.android.volley:volley:1.2.1")
@@ -92,7 +91,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 
     // Feature module Support
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
+    //implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
 
     // Testing Navigation
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
@@ -102,6 +101,7 @@ dependencies {
 
     //Datastorage, because fuck your life!
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
+
 
 
 
