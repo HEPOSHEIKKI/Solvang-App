@@ -90,7 +90,6 @@ var globalSolvangTime = "10:00"
 @ExperimentalMaterial3Api
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        stringRequest(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             pushNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
         }
@@ -105,7 +104,6 @@ class MainActivity : ComponentActivity() {
             }
         }
         createNotificationChannel()
-        //sendNotification()
     }
 
     object PrefManager {
