@@ -151,6 +151,7 @@ class MainActivity : ComponentActivity() {
                calendar.add(Calendar.DATE, 1)
            }
            alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(calendar.timeInMillis, intent), intent)
+
        }
        fun stopReminder(
            context: Context,
@@ -190,7 +191,7 @@ class MainActivity : ComponentActivity() {
 
 
                // Remove this line if you don't want to reschedule the reminder
-               startReminder(context.applicationContext)
+               startReminder(context.applicationContext, PrefManager.loadString(context))
            }
        }
 
