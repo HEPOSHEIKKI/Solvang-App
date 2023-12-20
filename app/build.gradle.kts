@@ -11,8 +11,8 @@ android {
         applicationId = "ee.pimedusemaa.solvang"
         minSdk = 30
         targetSdk = 34
-        versionCode = 3
-        versionName = "0.9.1 beta"
+        versionCode = 4
+        versionName = "1.0.0 stable"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
