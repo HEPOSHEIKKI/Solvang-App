@@ -228,7 +228,7 @@ class MainActivity : ComponentActivity() {
            val builder = NotificationCompat.Builder(applicationContext, channelId)
                .setContentTitle("The insult of the day is:")
                .setContentText(insult)
-               .setSmallIcon(R.drawable.dice_1)
+               .setSmallIcon(R.drawable.ic_icon_small)
                .setStyle(
                    NotificationCompat.BigTextStyle()
                        .bigText(insult)
@@ -350,6 +350,9 @@ fun MainContent(context: Context, modifier: Modifier = Modifier) {
                 //Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = { showTimePicker = true }, modifier = Modifier.width(180.dp)) {
                     Text(text = "Change time", fontSize = 18.sp)
+                }
+                Button(onClick = { stringRequest(context) }) {
+                    
                 }
             }
             Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxSize()) {
