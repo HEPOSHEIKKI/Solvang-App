@@ -17,6 +17,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -28,14 +29,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -72,10 +80,8 @@ val poppins = FontFamily(
     Font(R.font.poppins_regular, FontWeight.Normal)
 )
 
-private const val BASE_URL = "https://kotikone.xyz/solvang"
 
 private const val PREFS_FILENAME = "SolvangPrefs"
-private const val STRING_KEY = "solvangPrefTime"
 
 
 private const val CHANNEL_ID = "ee.pimedusemaa.solvang.insult"
@@ -92,8 +98,11 @@ class MainActivity : ComponentActivity() {
             pushNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
         }
         super.onCreate(savedInstanceState)
-        if (PrefManager.loadString(this) != ""){
-            globalSolvangTime = PrefManager.loadString(this)
+        if (PrefManager.loadString(this, "solvangPrefTime") != ""){
+            globalSolvangTime = PrefManager.loadString(this, "solvangPrefTime")
+        }
+        if (PrefManager.loadString(this, "solvangApiUrl") == ""){
+            PrefManager.saveString(this, "https://kotikone.xyz/solvang", "solvangApiUrl")
         }
         RemindersManager.startReminder(this)
         setContent {
@@ -105,16 +114,16 @@ class MainActivity : ComponentActivity() {
     }
 
     object PrefManager {
-        fun saveString(context: Context, value: String){
+        fun saveString(context: Context, value: String, key: String){
             val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE)
             val editor: SharedPreferences.Editor = sharedPreferences.edit()
-            editor.putString(STRING_KEY, value)
+            editor.putString(key, value)
             editor.apply()
         }
 
-        fun loadString(context: Context): String{
+        fun loadString(context: Context, key: String): String{
             val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE)
-            return sharedPreferences.getString(STRING_KEY, "") ?: ""
+            return sharedPreferences.getString(key, "") ?: ""
         }
     }
 
@@ -191,7 +200,7 @@ class MainActivity : ComponentActivity() {
 
 
                // Remove this line if you don't want to reschedule the reminder
-               startReminder(context.applicationContext, PrefManager.loadString(context))
+               startReminder(context.applicationContext, PrefManager.loadString(context, "solvangPrefTime"))
            }
        }
 
@@ -281,11 +290,20 @@ fun MainContent(context: Context, modifier: Modifier = Modifier) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         val solvangtime = remember { mutableStateOf(globalSolvangTime) }
         var showTimePicker by remember { mutableStateOf(false) }
+        var showChangeApi by remember { mutableStateOf(false) }
         val state = rememberTimePickerState()
         val formatter = remember { SimpleDateFormat("HH:mm", Locale.getDefault()) }
         val snackState = remember { SnackbarHostState() }
         val snackScope = rememberCoroutineScope()
         SnackbarHost(hostState = snackState)
+
+        if (showChangeApi) {
+            changeApiDialog(
+                onDismissRequest = { showChangeApi = false },
+                onConfirmation = { showChangeApi = false },
+                context
+            )
+        }
 
         if (showTimePicker) {
             TimePickerDialog(onCancel = { showTimePicker = false }, onConfirm = {
@@ -294,7 +312,7 @@ fun MainContent(context: Context, modifier: Modifier = Modifier) {
                 cal.set(Calendar.MINUTE, state.minute)
                 cal.isLenient = false
                 solvangtime.value = formatter.format(cal.time)
-                MainActivity.PrefManager.saveString(context, formatter.format(cal.time))
+                MainActivity.PrefManager.saveString(context, formatter.format(cal.time), "solvangPrefTime")
                 globalSolvangTime = formatter.format(cal.time)
                 MainActivity.RemindersManager.stopReminder(context, 123)
                 MainActivity.RemindersManager.startReminder(context)
@@ -308,10 +326,9 @@ fun MainContent(context: Context, modifier: Modifier = Modifier) {
                 }
             }
         }
-        Surface {
+        Surface (modifier = Modifier.fillMaxWidth()){
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -333,6 +350,11 @@ fun MainContent(context: Context, modifier: Modifier = Modifier) {
                 //Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = { showTimePicker = true }, modifier = Modifier.width(180.dp)) {
                     Text(text = "Change time", fontSize = 18.sp)
+                }
+            }
+            Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxSize()) {
+                FloatingActionButton(onClick = { showChangeApi = true }, modifier = Modifier.padding(16.dp)) {
+                    Icon(imageVector = Icons.Rounded.Settings, contentDescription = "API url settings button")
                 }
             }
         }
@@ -399,7 +421,7 @@ fun TimePickerDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 fun stringRequest(context: Context){
     val queue = Volley.newRequestQueue(context)
-    val stringRequest = StringRequest(Request.Method.GET, BASE_URL,
+    val stringRequest = StringRequest(Request.Method.GET, MainActivity.PrefManager.loadString(context, "solvangApiUrl"),
         {response ->
             println("Response is response")
             val notificationManager = ContextCompat.getSystemService(
@@ -414,6 +436,74 @@ fun stringRequest(context: Context){
             )
         }, { println("HTTP error idfk I hate Java") })
     queue.add(stringRequest)
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun changeApiDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    context: Context
+) {
+    MaterialTheme {
+        Dialog(onDismissRequest = { onDismissRequest() }) {
+            var text by remember { mutableStateOf("") }
+            @Suppress("LiftReturnOrAssignment")
+            if (MainActivity.PrefManager.loadString(context, "solvangApiUrl") == ""){
+                text = "https://kotikone.xyz/solvang"
+            }
+            else {
+                text = MainActivity.PrefManager.loadString(context, "solvangApiUrl")
+            }
+            Card (modifier = Modifier
+                .fillMaxWidth()
+                .height(275.dp)
+                .padding(16.dp),
+                shape = RoundedCornerShape(16.dp)) {
+                Column (modifier = Modifier
+                    .fillMaxSize(),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = "Change the API url",
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .wrapContentSize(Alignment.TopCenter),
+                        fontSize = 24.sp,
+                        fontFamily = poppins,
+                        textAlign = TextAlign.Center)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(value = text, onValueChange = { text = it },
+                        label = {Text("URL")}, modifier = Modifier.padding(16.dp),
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer
+                        ),
+                        singleLine = true
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TextButton(
+                            onClick = { onDismissRequest() },
+                            modifier = Modifier.padding(8.dp),
+                        ) {
+                            Text("Dismiss")
+                        }
+                        TextButton(
+                            onClick = {
+                                onConfirmation()
+                                MainActivity.PrefManager.saveString(context, text, "solvangApiUrl")
+                                      },
+                            modifier = Modifier.padding(8.dp),
+                        ) {
+                            Text("Confirm")
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 
