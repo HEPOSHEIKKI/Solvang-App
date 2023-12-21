@@ -351,9 +351,6 @@ fun MainContent(context: Context, modifier: Modifier = Modifier) {
                 Button(onClick = { showTimePicker = true }, modifier = Modifier.width(180.dp)) {
                     Text(text = "Change time", fontSize = 18.sp)
                 }
-                Button(onClick = { stringRequest(context) }) {
-                    
-                }
             }
             Column(horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxSize()) {
                 FloatingActionButton(onClick = { showChangeApi = true }, modifier = Modifier.padding(16.dp)) {
