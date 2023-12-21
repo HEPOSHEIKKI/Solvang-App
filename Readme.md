@@ -18,6 +18,12 @@ Solvang supports material you:
 ### github
 The app can be downloaded from the releases section
 ### Install from F-Droid
+<a href="https://kotikone.xyz/fdroid/repo">
+    <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+    alt="Get it on F-Droid"
+    height="80">
+</a>
+
 Add the repo `https://kotikone.xyz/fdroid/repo` to your F-Droid
 
 ## License
