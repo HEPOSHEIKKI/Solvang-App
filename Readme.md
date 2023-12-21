@@ -15,8 +15,16 @@ Solvang supports material you:
 <img src="https://github.com/HEPOSHEIKKI/Solvang-App/assets/51783206/e728c472-da95-4387-b0cd-c34bc7a3a427" width=25% height=25%>
 
 ## Installation
+### github
+The app can be downloaded from the releases section
+### Install from F-Droid
+<a href="https://kotikone.xyz/fdroid/repo">
+    <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+    alt="Get it on F-Droid"
+    height="80">
+</a>
 
-The app can be downloaded from the releases section, and f-droid support will be coming soon (via a 3rd party repo, I don't want this software tarnishing the official repos)
+Add the repo `https://kotikone.xyz/fdroid/repo` to your F-Droid
 
 ## License
 
